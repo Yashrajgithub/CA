@@ -2,10 +2,6 @@ export default async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   const { prompt } = req.body;
 
-  if (!apiKey) {
-    return res.status(500).json({ error: "API key missing in environment" });
-  }
-
   const payload = {
     contents: [
       {
@@ -30,21 +26,23 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // If API returns an error object
+    console.log("Full Gemini API Response:", JSON.stringify(data, null, 2)); // ✅ ADD THIS LINE
+
     if (data.error) {
-      console.error("Gemini API error:", data.error);
-      return res.status(500).json({ error: data.error.message || "Unknown Gemini API error" });
+      console.error("Gemini API Error:", data.error);
+      return res.status(500).json({ error: data.error.message });
     }
 
     const dreamText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
     if (dreamText) {
-      res.status(200).json({ text: dreamText });
+      return res.status(200).json({ text: dreamText });
     } else {
-      console.warn("Unexpected Gemini response:", JSON.stringify(data, null, 2));
-      res.status(500).json({ error: "Malformed response", raw: data });
+      console.warn("No dream text found in Gemini response");
+      return res.status(200).json({ warning: "Empty dream", raw: data }); // ✅ Temporarily send raw data
     }
   } catch (error) {
-    console.error("Server Error:", error.message);
+    console.error("Backend Error:", error.message);
     res.status(500).json({ error: error.message });
   }
 }
