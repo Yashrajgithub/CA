@@ -535,11 +535,12 @@
 
                     console.log("Sending request to Gemini API:", apiUrl, payload); // Added logging
 
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userPrompt }),
-                    });
+                   const response = await fetch("/api/gemini", {
+                       method: "POST",
+                       headers: { "Content-Type": "application/json" },
+                       body: JSON.stringify({ prompt: userPrompt }),
+                   });
+
 
                     console.log("Received response status:", response.status); // Added logging
 
