@@ -32,7 +32,3 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'Something went wrong', details: error.message });
   }
 }
-
-
-
-                    const apiKey = "AIzaSyDZQieK82_j6n6yKQ9a91gDI0DcQGoan4E"; // Placeholder for the actual API key
